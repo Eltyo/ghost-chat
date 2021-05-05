@@ -67,7 +67,7 @@ export default class ReleaseCheck extends Vue {
 
   async created(): Promise<void> {
     const releaseResponse = await fetch(
-      'https://api.github.com/repos/lettucekiing/ghost-chat/releases',
+      'https://api.github.com/repositories/364204306/releases',
     ).then((res) => res.json());
 
     const releaseVersion = releaseResponse[0].tag_name.slice(1, releaseResponse[0].tag_name.length);
