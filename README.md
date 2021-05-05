@@ -46,6 +46,8 @@ or you just want to have your chat on your main screen.
 3. Run `mpv.exe --input-ipc-server=\\.\pipe\mpv-ghost-chat video.mp4`
 4. Run `Ghost-Chat.1.4.0.exe --chatlog="C:\chatlog.txt"`
 
+Note: Currently does not support emotes, badges or name colours.
+
 ## Additional info
 
 If you have any suggestions for features, or you've found a bug, feel free to go to [https://github.com/Enubia/ghost-chat/issues/new/choose](https://github.com/Enubia/ghost-chat/issues/new/choose) or join the [Discord server](https://discord.gg/V83zRha) and post a bug or feature report/request into one of the channels.
