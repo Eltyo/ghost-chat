@@ -45,6 +45,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { client, Client } from 'tmi.js';
 import { StoreConstants } from '@/utils/constants';
+import { unescape } from 'querystring';
 import Loading from '@/renderer/components/Loading.vue';
 import MenuButtons from '@/renderer/components/MenuButtons.vue';
 import ChatMessage from '@/renderer/components/ChatMessage.vue';
@@ -52,6 +53,7 @@ import ChatMessage from '@/renderer/components/ChatMessage.vue';
 import { IBadge } from '@/renderer/types/IBadge';
 import { IMessageResponse } from '@/renderer/types/IMessageResponse';
 import Message from '@/utils/Message';
+import MPVClient from '@/utils/MPVClient';
 
 @Component({
   name: 'Chat',
@@ -68,7 +70,9 @@ export default class Chat extends Vue {
 
   clearChatTimer = Number(this.$config.get(StoreConstants.Timer, 0));
 
-  client: Client;
+  client: Client | MPVClient;
+
+  useMpvClient = false;
 
   data: IMessageResponse[] = [];
 
@@ -82,7 +86,7 @@ export default class Chat extends Vue {
 
   // inverted chat set to default
   // until we figure out why the scrolling isn't working in frameless windows
-  addNewMessageToBottom = false; // !this.$config.get(StoreConstants.ReverseChat, false);
+  addNewMessageToBottom = true; // !this.$config.get(StoreConstants.ReverseChat, false);
 
   interval;
 
@@ -123,22 +127,38 @@ export default class Chat extends Vue {
   }
 
   async created(): Promise<void> {
+    if ('chatlog' in this.$route.params) {
+      this.useMpvClient = true;
+    }
+
     this.isSetHideBordersByIcon = this.$config.has(StoreConstants.HideBordersByIcon);
 
-    if (this.channel.length > 0) {
-      this.client = client({
-        channels: [this.channel],
-        connection: {
-          reconnect: true,
-        },
-      });
-
-      await this.client.connect().catch((err) => {
-        throw new Error(`Failed to connect to channel ${this.broadCaster}: ${err}`);
-      });
+    if (this.channel.length > 0 || this.useMpvClient) {
+      if (this.useMpvClient) {
+        this.client = new MPVClient();
+        const chatlog = unescape(this.$route.params.chatlog);
+        await this.client.init(chatlog);
+      } else {
+        this.client = client({
+          channels: [this.channel],
+          connection: {
+            reconnect: true,
+          },
+        });
+        await this.client.connect().catch((err) => {
+          throw new Error(`Failed to connect to channel ${this.broadCaster}: ${err}`);
+        });
+      }
 
       this.isLoading = false;
       this.isWaitingForMessages = true;
+
+      if (this.useMpvClient) {
+        this.client = this.client as MPVClient;
+        this.client.on('delete', () => {
+          this.data = [];
+        });
+      }
 
       this.client.on('message', async (_channel, userstate, message) => {
         if (this.interval) {

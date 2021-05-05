@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import ElectronStore from 'electron-store';
+import { escape } from 'querystring';
+import minimist from 'minimist';
 import { ipcRenderer } from 'electron';
 import './assets/scss/main.scss';
 import { StoreConstants } from '@/utils/constants';
@@ -36,7 +38,12 @@ Vue.prototype.$isSettingsPage = electronStore.get(StoreConstants.IsSettingsPage,
 Vue.prototype.$fontStroke = electronStore.get(StoreConstants.FontStroke, false);
 Vue.prototype.$strokeColor = electronStore.get(StoreConstants.StrokeColor, '#000');
 
-new Vue({
+const vue = new Vue({
   ...App,
   router,
 }).$mount('#app');
+
+const args = minimist(process.argv);
+if ('chatlog' in args) {
+  vue.$router.replace({ name: 'chat', params: { chatlog: escape(args.chatlog) } });
+}

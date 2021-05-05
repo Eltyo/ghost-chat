@@ -1,5 +1,5 @@
 // electron stuff
-import { app, protocol, BrowserWindow, Tray, Menu, ipcMain } from 'electron';
+import { app, protocol, BrowserWindow, Tray, Menu, ipcMain, globalShortcut } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import windowStateKeeper from 'electron-window-state';
 import contextMenu from 'electron-context-menu';
@@ -60,8 +60,14 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
+      ...(app.commandLine.hasSwitch('chatlog') && {
+        additionalArguments: [`--chatlog=${app.commandLine.getSwitchValue('chatlog')}`],
+      }),
     },
   });
+  // if (process.env.NODE_ENV !== 'production') {
+  //   win.webContents.openDevTools();
+  // }
 
   win.setIgnoreMouseEvents(Boolean(store.get(StoreConstants.ClickThrough)) || false);
   win.setAlwaysOnTop(true, 'pop-up-menu');
@@ -171,6 +177,14 @@ async function createWindow() {
     },
   ]);
 
+  app.whenReady().then(() => {
+    globalShortcut.register('Escape', async () => {
+      win?.setIgnoreMouseEvents(false);
+      await revertWindowSettings();
+      win?.reload();
+    });
+  });
+
   tray?.setToolTip('Ghost Chat');
   tray?.setContextMenu(trayIconMenu);
 
@@ -191,10 +205,6 @@ ipcMain.on(IpcConstants.Close, async () => {
   if (store.has(StoreConstants.IsSettingsPage)) {
     store.delete(StoreConstants.IsSettingsPage);
   }
-
-  const state = store.get(StoreConstants.SavedWindowState) as IWindowState;
-  win?.setSize(state.sizeX, state.sizeY);
-  win?.setPosition(state.posX, state.posY);
 
   if (process.platform !== 'darwin') {
     store.delete(StoreConstants.Channel);
