@@ -43,7 +43,7 @@ or you just want to have your chat on your main screen.
 
 1. Download the chatlog for a twitch stream in text format.
 2. Download the video for that twitch stream.
-3. Run `mpv.exe --input-ipc-server=\\.\pipe\mpv-ghost-chat video.mp4`
+3. Run `mpv.exe --input-ipc-server=\\.\pipe\StreamBuffRe_Remote video.mp4`
 4. Run `Ghost-Chat.1.4.0.exe --chatlog="C:\chatlog.txt"`
 
 Note: Currently does not support emotes, badges or name colours.
