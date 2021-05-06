@@ -13,12 +13,7 @@
         <span>Connected, waiting for messages...</span>
       </div>
       <div v-for="item of data" v-else :key="item.key">
-        <div
-          :style="
-            item.message.toLowerCase().includes(`@${broadCaster}`) ? 'background: #d15b5b' : ''
-          "
-          class="mb-1 text-text-white"
-        >
+        <div class="mb-1 text-text-white">
           <div id="message" class="break-words">
             <div v-if="item.user && item.user.badges">
               <img
