@@ -23,7 +23,7 @@ export default class MPVClient {
     }
   }
 
-  init(chatlog, socketName = 'StreamBuffRe_Remote'): Promise<void> {
+  init(chatlog, socketName = 'MPVControllPipe'): Promise<void> {
     return new Promise((resolve, reject) => {
       access(chatlog, (err) => {
         if (err) {
