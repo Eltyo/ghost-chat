@@ -1,5 +1,5 @@
 <template>
-  <div id="settings" class="background-filled">
+  <div id="settings" class="background-filled pb-8">
     <MenuButtons />
     <ul class="flex border-b-2 border-gray-600 w-full text-center">
       <li class="w-2/4 -mb-px" @click="setActiveTab('general')">
@@ -206,7 +206,7 @@
         </div>
       </div>
     </div>
-    <div class="buttons grid w-full fixed">
+    <div class="buttons grid w-full">
       <div class="text-center">
         <div class="flex justify-center">
           <div class="w-1/3 text-center">
@@ -399,17 +399,9 @@ export default class Settings extends Vue {
 <style scoped lang="scss">
 #settings {
   -webkit-app-region: no-drag;
+  max-height: 100vh;
+  overflow-y: auto;
 }
-.delimiter {
-  position: absolute;
-  width: 60%;
-  left: 20%;
-  border: 1px solid rgb(179, 176, 176);
-}
-.buttons {
-  bottom: 30px;
-}
-
 .channel-btn {
   left: 30%;
 }
