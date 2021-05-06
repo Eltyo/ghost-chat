@@ -98,7 +98,7 @@
               class="mt-3 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div class="channel-btn absolute w-2/5">
+          <div class="channel-btn w-2/5 mx-auto">
             <div
               id="submit-button"
               class="duration-300 bg-main hover:bg-main-darker cursor-pointer mt-2 text-white-800 py-1 px-2 rounded"
