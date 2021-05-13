@@ -1,5 +1,14 @@
 // electron stuff
-import { app, protocol, BrowserWindow, Tray, Menu, ipcMain, globalShortcut } from 'electron';
+import {
+  app,
+  protocol,
+  BrowserWindow,
+  Tray,
+  Menu,
+  ipcMain,
+  globalShortcut,
+  screen,
+} from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import windowStateKeeper from 'electron-window-state';
 import contextMenu from 'electron-context-menu';
@@ -47,13 +56,21 @@ async function createWindow() {
     defaultHeight: 800,
   });
 
+  const displays = screen.getAllDisplays();
+  let maxHeight = 99999999;
+  displays.forEach((display) => {
+    if (display.workAreaSize.height < maxHeight) {
+      maxHeight = display.workAreaSize.height;
+    }
+  });
   // Create the browser window.
   win = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    minHeight: 335,
+    minHeight: 200,
+    maxHeight,
     transparent: true,
     frame: false,
     resizable: true,
@@ -86,7 +103,7 @@ async function createWindow() {
         label: 'Settings',
         click: async () => {
           if (win) {
-            win.resizable = false;
+            // win.resizable = false;
 
             const [posX, posY] = win.getPosition();
             const [sizeX, sizeY] = win.getSize();
