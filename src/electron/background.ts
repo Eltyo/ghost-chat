@@ -77,9 +77,13 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
-      ...(app.commandLine.hasSwitch('chatlog') && {
-        additionalArguments: [`--chatlog=${app.commandLine.getSwitchValue('chatlog')}`],
-      }),
+      ...(app.commandLine.hasSwitch('chatlog') &&
+        app.commandLine.hasSwitch('pipename') && {
+          additionalArguments: [
+            `--chatlog=${app.commandLine.getSwitchValue('chatlog')}`,
+            `--pipename=${app.commandLine.getSwitchValue('pipename')}`,
+          ],
+        }),
     },
   });
   // if (process.env.NODE_ENV !== 'production') {

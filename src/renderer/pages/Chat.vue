@@ -132,7 +132,8 @@ export default class Chat extends Vue {
       if (this.useMpvClient) {
         this.client = new MPVClient();
         const chatlog = unescape(this.$route.params.chatlog);
-        await this.client.init(chatlog);
+        const socketName = unescape(this.$route.params.socketName);
+        await this.client.init(chatlog, socketName);
       } else {
         this.client = client({
           channels: [this.channel],

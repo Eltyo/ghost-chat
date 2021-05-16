@@ -44,6 +44,18 @@ const vue = new Vue({
 }).$mount('#app');
 
 const args = minimist(process.argv);
+const parameters = {
+  chatlog: '',
+  socketName: '',
+};
+
 if ('chatlog' in args) {
-  vue.$router.replace({ name: 'chat', params: { chatlog: escape(args.chatlog) } });
+  parameters.chatlog = escape(args.chatlog);
 }
+if ('pipename' in args) {
+  parameters.socketName = escape(args.pipename);
+}
+vue.$router.replace({
+  name: 'chat',
+  params: parameters,
+});
